@@ -1,6 +1,6 @@
 # Laravel Query Filter #
 
-With this package you can make and validate filters for your querys in a simpler and cleaner way
+With this package you can make and validate query filters in a simple and clean way.
 
 ## Use ##
 
@@ -46,5 +46,4 @@ With this package you can make and validate filters for your querys in a simpler
 ```
 
 
-TODO: clean and comment the code. 
-
+TODO: clean and comment the code.
