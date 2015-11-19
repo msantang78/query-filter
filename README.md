@@ -46,4 +46,6 @@ With this package you can make and validate query filters in a simple and clean 
 ```
 
 
-TODO: clean and comment the code.
+# TODO #
+clean and comment the code.
+TEST!!!
