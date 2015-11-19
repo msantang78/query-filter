@@ -44,7 +44,7 @@ With this package you can make and validate query filters in a simple and clean 
         // apply filter to query
         $f->apply($query, $input);
 ```
-### Inheritance ###
+### Using Inheritance ###
 ```
 #!php
 
