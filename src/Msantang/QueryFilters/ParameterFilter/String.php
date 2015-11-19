@@ -4,7 +4,7 @@ namespace Msantang\QueryFilters\ParameterFilter;
 
 use Msantang\QueryFilters\Contracts\ParameterFilterInterface;
 
-class String implements ParameterFilterInterface
+class String extends AbstractParameterFilter implements ParameterFilterInterface
 {
     public function apply($query, $value, $name,  $opt = null)
     {

@@ -6,7 +6,7 @@ use Msantang\QueryFilters\Contracts\ParameterFilterInterface;
 
 use Carbon\Carbon;
 
-class Datetime implements ParameterFilterInterface
+class Datetime extends AbstractParameterFilter implements ParameterFilterInterface
 {
     public function apply($query, $value, $name,  $opt = null)
     {
