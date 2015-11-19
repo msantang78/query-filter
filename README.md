@@ -1,6 +1,6 @@
 # Laravel Query Filter #
 
-With this package you can make and validate query filters in a simple and clean way.
+With this package you can create filters to queries as well as validate the input values in a simple and clean way
 
 ## Use ##
 
@@ -11,9 +11,9 @@ With this package you can make and validate query filters in a simple and clean 
 <?php
         // mapping from input to filter values
         $mapping = [
-            'fecha'    => 'desde|hasta',
+            'fecha'    => 'desde|hasta',  // multiple filters
             'local_id' => 'local_id',
-            'user_id'  => 'user_id'
+            'user.name'  => 'user_name'   // filter a joined model (user relation)
         ];
 
         // input validation
@@ -21,7 +21,7 @@ With this package you can make and validate query filters in a simple and clean 
             'desde'    => 'date',
             'hasta'    => 'date',
             'local_id' => 'integer',
-            'user_id'  => 'integer'
+            'user.name'  => 'string'
         ];
 
         // make filter input
@@ -36,7 +36,8 @@ With this package you can make and validate query filters in a simple and clean 
         // construct filters
         $f = new Filter([
             'fecha'    => 'date:from|date:to',
-            'user_id'  => 'numeric:eq'
+            'local_id' => 'numeric:eq',
+            'user.name'  => 'string:contains'
         ]);
 
         
