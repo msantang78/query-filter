@@ -7,7 +7,6 @@ namespace Msantang\QueryFilters;
 
 
 use Msantang\QueryFilters\Contracts\FilterInterface;
-use Msantang\QueryFilters\Contracts\ParameterFilterInterface;
 
 /**
  * Class Filter
@@ -80,6 +79,8 @@ class Filter implements FilterInterface
             $opt   = @$filters[1];
 
             $filter = $this->getParameterFilter($class);
+
+            if (!is_callable($filter)) throw new \Exception('ParameterFilter is not callable');
 
             $p = $this->joined($param);
 
