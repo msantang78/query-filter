@@ -1,11 +1,17 @@
 {
     "name": "msantang/query-filters",
-    "description": "",
+    "description": "Query Filters with validation and relationship support",
     "authors": [
         {
             "name": "Martin Alejandro Santangelo",
             "email": "msantang@smartsoftware.com.ar"
         }
+    ],
+    "keywords": [
+      "laravel",
+      "eloquent",
+      "filter",
+      "query"
     ],
     "require": {
         "php": ">=5.4.0",
