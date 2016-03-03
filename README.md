@@ -1,8 +1,21 @@
 # Laravel Query Filter #
 
-With this package you can create filters to queries as well as validate the input values in a simple and clean way
+With this package you can create filters for queries as well as validate the input values in a simple and clean way.
 
-## Use ##
+## Install ##
+
+Laravel 5
+
+```
+        composer require msantang/query-filters 0.2.*
+```
+
+
+Laravel 4
+
+```
+        composer require msantang/query-filters 0.1.*
+```
 
 ### Fast example ###
 ```
