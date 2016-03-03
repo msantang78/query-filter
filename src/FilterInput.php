@@ -3,7 +3,6 @@
 namespace Msantang\QueryFilters;
 
 use Validator;
-use Input;
 
 class FilterInput
 {
@@ -82,7 +81,8 @@ class FilterInput
 
     public static function fromInput($mapping = null, $defaults = null, $rules = null)
     {
-        return new static( Input::all(), $mapping, $defaults, $rules);
+        $request = app()['Illuminate\Http\Request'];
+        return new static( $request->all(), $mapping, $defaults, $rules);
     }
 
     public static function fromArray($data,$mapping = null, $defaults = null, $rules = null)

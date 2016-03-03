@@ -1,6 +1,6 @@
 {
     "name": "msantang/query-filters",
-    "description": "Query Filters with validation and relationship support",
+    "description": "Laravel 4|5 Query Filters with validation and relationship support",
     "authors": [
         {
             "name": "Martin Alejandro Santangelo",
@@ -15,11 +15,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4.2.*"
+        "illuminate/support": "~5.1"
     },
     "autoload": {
-        "psr-0": {
-            "Msantang\\QueryFilters": "src/"
+        "psr-4": {
+            "Msantang\\QueryFilters\\": "src/"
         }
     },
     "minimum-stability": "stable"
