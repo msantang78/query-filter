@@ -5,7 +5,7 @@ namespace Msantang\QueryFilters\ParameterFilter;
 use Msantang\QueryFilters\Contracts\ParameterFilterInterface;
 use Carbon\Carbon;
 
-class Date extends AbstractParameterFilter implements ParameterFilterInterface
+class DateFilter extends AbstractParameterFilter implements ParameterFilterInterface
 {
     public function apply($query, $value, $name,  $opt = null)
     {

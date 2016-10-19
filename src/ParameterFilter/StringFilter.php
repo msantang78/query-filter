@@ -4,14 +4,14 @@ namespace Msantang\QueryFilters\ParameterFilter;
 
 use Msantang\QueryFilters\Contracts\ParameterFilterInterface;
 
-class String extends AbstractParameterFilter implements ParameterFilterInterface
+class StringFilter extends AbstractParameterFilter implements ParameterFilterInterface
 {
     public function apply($query, $value, $name,  $opt = null)
     {
         if (empty($opt)) $opt[0] = 'contains';
 
         switch ($opt[0]) {
-            case 'start':
+            case 'begin':
                 $query->where($name,'like', "$value%");
                 break;
             case 'end':

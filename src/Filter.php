@@ -80,7 +80,7 @@ class Filter implements FilterInterface
 
             $filter = $this->getParameterFilter($class);
 
-            if (!is_callable($filter)) throw new \Exception('ParameterFilter is not callable');
+            if (!is_callable($filter)) throw new Exception('ParameterFilter is not callable');
 
             $p = $this->joined($param);
 
@@ -134,7 +134,7 @@ class Filter implements FilterInterface
             return static::$macros[$class];
         }
 
-        return app('\\Msantang\\QueryFilters\\ParameterFilter\\'.$class);
+        return app('\\Msantang\\QueryFilters\\ParameterFilter\\'.$class.'Filter');
     }
 
     private function explodeFilters()
