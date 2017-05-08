@@ -1,6 +1,7 @@
 {
     "name": "msantang/query-filters",
     "description": "Laravel 4|5 Query Filters with validation and relationship support",
+    "license": "MIT",
     "authors": [
         {
             "name": "Martin Alejandro Santangelo",
