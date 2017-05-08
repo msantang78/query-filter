@@ -24,7 +24,7 @@ class StringFilter extends AbstractParameterFilter implements ParameterFilterInt
                 $filters = explode(' ', $value);
                 foreach ($filters as $e)
                 {
-                    $query->whereRaw("descripcion REGEXP ?",['(^| )(^.*)'.$e.'.*(    |$)']);
+                    $query->whereRaw("$name REGEXP ?",['(^| )(^.*)'.$e.'.*(    |$)']);
                 }
                 break;
             case 'contains':
