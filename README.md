@@ -1,7 +1,14 @@
-# Laravel Query Filter #
-[![Latest Stable Version](http://img.shields.io/packagist/v/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters) [![Total Downloads](http://img.shields.io/packagist/dt/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
+# Laravel Eloquent/Query Filter #
+[![Latest Stable Version](http://img.shields.io/packagist/v/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters) 
+[![Total Downloads](http://img.shields.io/packagist/dt/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
+[![License](https://img.shields.io/packagist/l/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
 
-With this package you can create filters for queries as well as validate the input values in a simple and clean way.
+Filter Eloquent model's in a simple and clean way. 
+
+* Input values validation
+* Support multiple filters by fields
+* Filter remote fields through relations
+* Custom filter types through classes or closures
 
 ## Install ##
 
@@ -17,12 +24,23 @@ Laravel 4
 ```
         composer require msantang/query-filters 0.1.*
 ```
+## Use ##
+Example to filter Users model
 
-### Fast example ###
+```
+  /users/?created_from=2017-01-01&created_to=2017-01-01&roles_name=Admin
+  /users/?id=2
+  /users/?id[]=1&id[]=3&id[]=6
+```
+
+
+### Using constructors ###
 ```
 #!php
 
 <?php
+
+
         // mapping from input to filter values
         $mapping = [
             'created_at' => 'created_from|created_to',  // multiple filters
@@ -35,11 +53,11 @@ Laravel 4
             'created_from' => 'date',
             'created_to'   => 'date',
             'id'           => 'integer',
-            'user.name'    => 'string'
+            'roles.name'   => 'string'
         ];
 
         // make filter input from request
-        $input = FilterInput::fromInput( $mapping, null, $rules);
+        $input = FilterInput::fromRequest( $mapping, null, $rules );
         
         // Same as
         // $input = new FilterInput(request(), $mapping, null, $rules);
@@ -67,12 +85,16 @@ Laravel 4
         return $query->get();
 ```
 ### Using Inheritance ###
+
+Create Filter Input Class
 ```
 #!php
+<?php 
+        namespace App\Filters;
 
-<?php
+        use Msantang\QueryFilters\FilterInput;
 
-        class UsersFilterInput extends Msantang\QueryFilters\FilterInput
+        class UsersFilterInput extends FilterInput
         {
             // mapping from input to filter values
             protected $mapping = [
@@ -89,17 +111,32 @@ Laravel 4
                 'user.name'    => 'string'
             ];
         }
+```
+Create Filter Class
+```
+#!php
+<?php
+        namespace App\Filters;
 
-        class UsersFilter extends Msantang\QueryFilters\Filter
+        use Msantang\QueryFilters\Filter;
+
+        class UsersFilter extends Filter
         {
             protected $filters = [
+                //field         field filters
                 'created_at' => 'date:from|date:to',
                 'id'         => 'numeric:eq'
             ];
         }
-
+```
+Use filter
+```
+#!php
+<?php
+        use App\Filters\UsersFilterInput;
+        use App\Filters\UserFilter;
         // make filter input from request
-        $input = UsersFilterInput::fromInput();
+        $input = UsersFilterInput::fromRequest();
 
         // construct filters
         $filter = new UsersFilter();
@@ -116,7 +153,60 @@ Laravel 4
 
         return $query->get();
 ```
+## Filter Types##
 
+### Numeric ###
+| Name          |   Operation  |      Accept   |
+|---------------|:-------------|--------------:|
+| numeric:eq    | Equal        | numeric,array |
+| numeric:neq   | Not Eequal   | numeric,array |
+| numeric:gt    | Grater       | numeric       |
+| numeric:lt    | Less         | numeric       |
+| numeric:gte   | Grater or Eq | numeric       |
+| numeric:lte   | Less or Eq   | numeric       |
+
+### String ###
+| Name            |   Operation                        | Accept        |
+|-----------------|:-----------------------------------|--------------:|
+| string:eq       | Equal                              | string        |
+| string:begin    | Begin with                         | string        |
+| string:end      | End with                           | string        |
+| string:contains | End with                           | string        |
+| string:words    | Search every word (space separated)| string        |
+
+### Date ###
+| Name          |   Operation  |Accept|
+|---------------|:-------------|-----:|
+| date:eq       | Equal        | date |
+| date:neq      | Not Eequal   | date |
+| date:from     | Grater or Eq | date |
+| date:to       | Less or Eq   | date |
+| date:after    | Grater than  | date |
+| date:before   | Less than    | date |
+
+### Datetime ###
+| Name              |   Operation  | Accept   |
+|-------------------|:-------------|---------:|
+| datetime:eq       | Equal        | datetime |
+| datetime:neq      | Not Eequal   | datetime |
+| datetime:from     | Grater or Eq | datetime |
+| datetime:to       | Less or Eq   | datetime |
+| datetime:after    | Grater than  | datetime |
+| datetime:before   | Less than    | datetime |
+
+## Creating custom fields filters ##
+
+Despite the build in field filters, you can add your own filters.
+
+### Closures ###
+```
+#!php
+<?php
+    $filters = [
+       'created_at' => 'date:from|date:to',
+        'id'         => []
+
+```
 # TODO #
 * clean and comment the code.
 * TEST!!!
