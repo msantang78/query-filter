@@ -1,4 +1,5 @@
 # Laravel Query Filter #
+[![Latest Stable Version](http://img.shields.io/packagist/v/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters) [![Total Downloads](http://img.shields.io/packagist/dt/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
 
 With this package you can create filters for queries as well as validate the input values in a simple and clean way.
 
@@ -24,39 +25,46 @@ Laravel 4
 <?php
         // mapping from input to filter values
         $mapping = [
-            'fecha'    => 'desde|hasta',  // multiple filters
-            'local_id' => 'local_id',
-            'user.name'  => 'user_name'   // filter a joined model (user relation)
+            'created_at' => 'created_from|created_to',  // multiple filters
+            'id'         => 'id',
+            'roles.name' => 'roles_name'   // filter a joined model (roles relation)
         ];
 
         // input validation
         $rules = [
-            'desde'    => 'date',
-            'hasta'    => 'date',
-            'local_id' => 'integer',
-            'user.name'  => 'string'
+            'created_from' => 'date',
+            'created_to'   => 'date',
+            'id'           => 'integer',
+            'user.name'    => 'string'
         ];
 
-        // make filter input
+        // make filter input from request
         $input = FilterInput::fromInput( $mapping, null, $rules);
+        
+        // Same as
+        // $input = new FilterInput(request(), $mapping, null, $rules);
 
-        // is valid?
+        // validate filter inputs
         if (!$input->validate()) {
             // do something with message bag
-            $input->messages()
+            dd($input->messages());
+            return;
         };
 
         // construct filters
-        $f = new Filter([
-            'fecha'    => 'date:from|date:to',
-            'local_id' => 'numeric:eq',
-            'user.name'  => 'string:contains'
+        $filter = new Filter([
+            //field         field filters
+            'created_at' => 'date:from|date:to',
+            'id'         => 'numeric:eq',
+            'roles.name' => 'string:contains'
         ]);
-
         
-        $query = Document::query();
+        $query = User::query();
+
         // apply filter to query
-        $f->apply($query, $input);
+        $filter->apply($query, $input);
+
+        return $query->get();
 ```
 ### Using Inheritance ###
 ```
@@ -64,47 +72,49 @@ Laravel 4
 
 <?php
 
-        class DocumentFilterInput extends Msantang\QueryFilters\FilterInput
+        class UsersFilterInput extends Msantang\QueryFilters\FilterInput
         {
-                // mapping from input to filter values
-                $mapping = [
-                    'fecha'    => 'desde|hasta',
-                    'local_id' => 'local_id',
-                    'user_id'  => 'user_id'
-                ];
+            // mapping from input to filter values
+            protected $mapping = [
+                'created_at' => 'created_from|created_to',  // multiple filters
+                'id'         => 'id',
+                'roles.name' => 'roles_name'   // filter a joined model (roles relation)
+            ];
 
-                // input validation
-                $rules = [
-                    'desde'    => 'date',
-                    'hasta'    => 'date',
-                    'local_id' => 'integer',
-                    'user_id'  => 'integer'
-                ];
+            // input validation
+            protected $rules = [
+                'created_from' => 'date',
+                'created_to'   => 'date',
+                'id'           => 'integer',
+                'user.name'    => 'string'
+            ];
         }
 
-        class DocumentFilter extends Msantang\QueryFilters\Filter
+        class UsersFilter extends Msantang\QueryFilters\Filter
         {
-                protected $filters = [
-                    'fecha'    => 'date:from|date:to',
-                    'user_id'  => 'numeric:eq'
-                ]
+            protected $filters = [
+                'created_at' => 'date:from|date:to',
+                'id'         => 'numeric:eq'
+            ];
         }
 
-        // make filter input
-        $input = DocumentFilterInput::fromInput();
+        // make filter input from request
+        $input = UsersFilterInput::fromInput();
 
         // construct filters
-        $f = new DocumentFilter();
+        $filter = new UsersFilter();
 
         // is valid?
         if (!$input->validate()) {
             // do something with message bag
-            $input->messages()
+            dd($input->messages());
         };
 
-        $query = Document::query();
+        $query = User::query();
         // apply filter to query
-        $f->apply($query, $input);
+        $filter->apply($query, $input);
+
+        return $query->get();
 ```
 
 # TODO #
