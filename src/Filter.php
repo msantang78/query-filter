@@ -59,6 +59,24 @@ class Filter implements FilterInterface
         }
     }
 
+    protected function getFilter($filter_definition)
+    {
+        $opt = null;
+
+        if (is_array($filter_definition)) {
+            $type = ucfirst($filter_definition[0]);
+            $opt   = @$filter_definition[1];
+
+            $filter = $this->getParameterFilter($type);
+        } else {
+            $filter = $filter_definition;
+        }
+
+        if (!is_callable($filter)) throw new Exception("$param: ParameterFilter is not callable");
+
+        return [$filter, $opt];
+    }
+
     /**
      * Apply the filters to a parameter
      *
@@ -66,52 +84,65 @@ class Filter implements FilterInterface
      * @param $value
      * @param $query
      */
-    protected function applyParameterFilter($param, $value, $query)
+    protected function applyParameterFilter($param, $values, $query)
     {
-        foreach($this->filters[$param] as $k => $filters) {
-
+        foreach($this->filters[$param] as $k => $filter_definition) {
             // if there is no value skip it
-            if (!array_key_exists($k, $value)) continue;
+            if (!array_key_exists($k, $values)) continue;
 
-            $v = $value[$k];
+            $fvalue = $values[$k][0];
+            // get the filter by definition
+            list($filter, $opt) = $this->getFilter($filter_definition, $v);
 
-            $class = ucfirst($filters[0]);
-            $opt   = @$filters[1];
+            // if options come
+            if (count($values[$k]) > 1) {
 
-            $filter = $this->getParameterFilter($class);
-
-            if (!is_callable($filter)) throw new Exception('ParameterFilter is not callable');
-
-            $p = $this->joined($param);
+                array_shift($values[$k]);
+                $opt = $values[$k];
+            }
+            // cheque if it's a joined filter
+            $fparam = $this->joined($param);
 
             // is joined?
-            if (is_array($p)) {
-
-                $param = array_pop($p);
-
-                $f = function($q) use($filter, $param, $v, $opt) {
-                    $filter($q, $v, $param, $opt);
-                };
-
-                while (count($p) > 1) {
-                    $rel = array_pop($p);
-
-                    $f = function($q) use($rel, $f, $filter, $param, $v, $opt) {
-                        $q->whereHas($rel, $f);
-                    };
-                }
-
-                $rel = array_pop($p);
-
-                $query->whereHas($rel, $f);
-
+            if (is_array($fparam)) {
+                $this->applyJoinedFilter($query, $fparam, $filter, $fvalue, $opt);
             } else {
-                $filter($query, $v, $param, $opt);
+                $filter($query, $fvalue, $fparam, $opt);
             }
         }
     }
 
     /**
+     * Apply a filter to joined columns
+     * @param  $query
+     * @param  array $joins  An array of join relations
+     * @param  Callable $filter Filter
+     * @param  $value
+     */
+    protected function applyJoinedFilter($query, $joins, $filter, $value, $opt)
+    {
+        $param = array_pop($joins);
+
+        $f = function($q) use($filter, $param, $value, $opt) {
+            $filter($q, $value, $param, $opt);
+        };
+
+        while (count($joins) > 1) {
+            $rel = array_pop($joins);
+
+            $f = function($q) use($rel, $f, $filter, $param, $value, $opt) {
+                $q->whereHas($rel, $f);
+            };
+        }
+
+        $rel = array_pop($joins);
+
+        $query->whereHas($rel, $f);
+    }
+
+    /**
+     * Return an string if $param is a column on the currento model or array if it is joined
+     *
      * @param $param
      * @return array|string
      */
@@ -125,18 +156,23 @@ class Filter implements FilterInterface
     }
 
     /**
-     * @param string $class
+     * @param string $type
      * @return mixed
      */
-    protected function getParameterFilter($class)
+    protected function getParameterFilter($type)
     {
-        if (array_key_exists($class, static::$macros)) {
-            return static::$macros[$class];
+        if (array_key_exists($type, static::$macros)) {
+            return static::$macros[$type];
         }
 
-        return app('\\Msantang\\QueryFilters\\ParameterFilter\\'.$class.'Filter');
+        return app('\\Msantang\\QueryFilters\\ParameterFilter\\'.$type.'Filter');
     }
 
+    /**
+     * Process filter definition string and return an array
+     *
+     * @return array
+     */
     private function explodeFilters()
     {
         foreach($this->filters as &$f) {

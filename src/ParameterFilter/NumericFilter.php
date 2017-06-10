@@ -24,11 +24,19 @@ class NumericFilter extends AbstractParameterFilter implements ParameterFilterIn
                 $query->where($name,'<', $value);
                 break;
             case 'neq':
-                $query->where($name,'<>',$value);
+                if (is_array($value)) {
+                    $query->whereNotIn($name,$value);
+                } else {
+                    $query->where($name,'<>',$value);
+                }
                 break;
             case 'eq':
             default:
-                $query->where($name,$value);
+                if (is_array($value)) {
+                    $query->whereIn($name,$value);
+                } else {
+                    $query->where($name,$value);
+                }
                 break;
         }
     }

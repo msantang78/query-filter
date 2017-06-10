@@ -17,7 +17,7 @@ class StringFilter extends AbstractParameterFilter implements ParameterFilterInt
             case 'end':
                 $query->where($name,'like', "%$value");
                 break;
-            case 'equal':
+            case 'eq':
                 $query->where($name, $value);
                 break;
             case 'words':
