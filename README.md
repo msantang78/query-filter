@@ -39,50 +39,48 @@ Example to filter Users model
 #!php
 
 <?php
+// mapping from input to filter values
+$mapping = [
+    'created_at' => 'created_from|created_to',  // multiple filters
+    'id'         => 'id',
+    'roles.name' => 'roles_name'   // filter a joined model (roles relation)
+];
 
+// input validation
+$rules = [
+    'created_from' => 'date',
+    'created_to'   => 'date',
+    'id'           => 'integer',
+    'roles.name'   => 'string'
+];
 
-        // mapping from input to filter values
-        $mapping = [
-            'created_at' => 'created_from|created_to',  // multiple filters
-            'id'         => 'id',
-            'roles.name' => 'roles_name'   // filter a joined model (roles relation)
-        ];
+// make filter input from request
+$input = FilterInput::fromRequest( $mapping, null, $rules );
 
-        // input validation
-        $rules = [
-            'created_from' => 'date',
-            'created_to'   => 'date',
-            'id'           => 'integer',
-            'roles.name'   => 'string'
-        ];
+// Same as
+// $input = new FilterInput(request(), $mapping, null, $rules);
 
-        // make filter input from request
-        $input = FilterInput::fromRequest( $mapping, null, $rules );
-        
-        // Same as
-        // $input = new FilterInput(request(), $mapping, null, $rules);
+// validate filter inputs
+if (!$input->validate()) {
+    // do something with message bag
+    dd($input->messages());
+    return;
+};
 
-        // validate filter inputs
-        if (!$input->validate()) {
-            // do something with message bag
-            dd($input->messages());
-            return;
-        };
+// construct filters
+$filter = new Filter([
+    //field         field filters
+    'created_at' => 'date:from|date:to',
+    'id'         => 'numeric:eq',
+    'roles.name' => 'string:contains'
+]);
 
-        // construct filters
-        $filter = new Filter([
-            //field         field filters
-            'created_at' => 'date:from|date:to',
-            'id'         => 'numeric:eq',
-            'roles.name' => 'string:contains'
-        ]);
-        
-        $query = User::query();
+$query = User::query();
 
-        // apply filter to query
-        $filter->apply($query, $input);
+// apply filter to query
+$filter->apply($query, $input);
 
-        return $query->get();
+return $query->get();
 ```
 ### Using Inheritance ###
 
@@ -90,68 +88,69 @@ Create Filter Input Class
 ```
 #!php
 <?php 
-        namespace App\Filters;
+namespace App\Filters;
 
-        use Msantang\QueryFilters\FilterInput;
+use Msantang\QueryFilters\FilterInput;
 
-        class UsersFilterInput extends FilterInput
-        {
-            // mapping from input to filter values
-            protected $mapping = [
-                'created_at' => 'created_from|created_to',  // multiple filters
-                'id'         => 'id',
-                'roles.name' => 'roles_name'   // filter a joined model (roles relation)
-            ];
+class UsersFilterInput extends FilterInput
+{
+    // mapping from input to filter values
+    protected $mapping = [
+        'created_at' => 'created_from|created_to',  // multiple filters
+        'id'         => 'id',
+        'roles.name' => 'roles_name'   // filter a joined model (roles relation)
+    ];
 
-            // input validation
-            protected $rules = [
-                'created_from' => 'date',
-                'created_to'   => 'date',
-                'id'           => 'integer',
-                'user.name'    => 'string'
-            ];
-        }
+    // input validation
+    protected $rules = [
+        'created_from' => 'date',
+        'created_to'   => 'date',
+        'id'           => 'integer',
+        'user.name'    => 'string'
+    ];
+}
 ```
 Create Filter Class
 ```
 #!php
 <?php
-        namespace App\Filters;
+namespace App\Filters;
 
-        use Msantang\QueryFilters\Filter;
+use Msantang\QueryFilters\Filter;
 
-        class UsersFilter extends Filter
-        {
-            protected $filters = [
-                //field         field filters
-                'created_at' => 'date:from|date:to',
-                'id'         => 'numeric:eq'
-            ];
-        }
+class UsersFilter extends Filter
+{
+    protected $filters = [
+        //field         field filters
+        'created_at' => 'date:from|date:to',
+        'id'         => 'numeric:eq'
+    ];
+}
 ```
 Use filter
 ```
 #!php
 <?php
-        use App\Filters\UsersFilterInput;
-        use App\Filters\UserFilter;
-        // make filter input from request
-        $input = UsersFilterInput::fromRequest();
+use App\Filters\UsersFilterInput;
+use App\Filters\UserFilter;
+// make filter input from request
+$input = UsersFilterInput::fromRequest();
+// could build it from array too: UsersFilterInput::fromArray(['id'=>2])
 
-        // construct filters
-        $filter = new UsersFilter();
+// construct filters
+$filter = new UsersFilter();
 
-        // is valid?
-        if (!$input->validate()) {
-            // do something with message bag
-            dd($input->messages());
-        };
+// is valid?
+if (!$input->validate()) {
+    // do something with message bag
+    dd($input->messages());
+};
 
-        $query = User::query();
-        // apply filter to query
-        $filter->apply($query, $input);
+$query = User::query();
+// apply filter to query
+$filter->apply($query, $input);
 
-        return $query->get();
+return $query->get();
 ```
 ## Filter Types##
 
@@ -202,11 +201,75 @@ Despite the build in field filters, you can add your own filters.
 ```
 #!php
 <?php
-    $filters = [
-       'created_at' => 'date:from|date:to',
-        'id'         => []
+$filters = [
+   'created_at' => 'date:from|date:to',
+   'id'         => [function($query, $value, $name,  $opt ){
+         $query->where($name, $value);
+    }]
+];
 
 ```
+
+### Classes ###
+
+```
+#!php
+<?php
+use Msantang\QueryFilters\Contracts\ParameterFilterInterface;
+use Msantang\QueryFilters\ParameterFilter\AbstractParameterFilter;
+
+class MyFilter extends AbstractParameterFilter implements ParameterFilterInterface
+{
+    public function apply($query, $value, $name,  $opt = null)
+    {
+        if (empty($opt)) $opt[0] = 'eq';
+
+        switch ($opt[0]) {
+            case 'eq':
+                $query->where($name,'=', $value);
+                break;
+            
+            default:
+                $query->where($name,'like', "%$value%");
+                break;
+        }
+
+    }
+}
+```
+
+```
+#!php
+<?php
+$f = new Filter([
+    'created_at'  => 'date:from|date:to',
+    'name'        => 'string:begin',
+    'roles.name'  => 'string:contains',
+    'id'          => [new MyFilter]
+]);
+```
+
+## Changing the operation for a field filter ##
+
+You could have a filter defined like this:
+
+```
+#!php
+<?php
+$mapping = [
+    'id' => 'byid',
+];
+
+$filter = [
+    'id' => 'numeric:eq'
+]
+```
+and then select an other operation dinamicaly
+
+```
+  /users/?byid=2&byid_opt[]=neq
+```
+{mapping_name}_opt[] = operation
+
 # TODO #
-* clean and comment the code.
 * TEST!!!
