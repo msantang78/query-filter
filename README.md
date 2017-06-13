@@ -12,18 +12,17 @@ Filter Eloquent model's in a simple and clean way.
 
 ## Install ##
 
-Laravel 5
+Require with composer
 
 ```
-        composer require msantang/query-filters 0.2.*
+composer require msantang/query-filters 0.2.*
 ```
-
-
-Laravel 4
+Add service provider to config/app.php (If you want to use creator command)
 
 ```
-        composer require msantang/query-filters 0.1.*
+Msantang\QueryFilters\QueryFiltersServiceProvider::class,
 ```
+
 ## Use ##
 Example to filter Users model
 
@@ -33,7 +32,57 @@ Example to filter Users model
   /users/?id[]=1&id[]=3&id[]=6
 ```
 
+### Create Filter and InputFilter ###
 
+```
+php artisan queryfilter:make User
+```
+By default this will create App/QueryFilters/UserFilter.php and App/QueryFilters/UserFilterInput.php
+
+```
+#!php
+<?php namespace App\QueryFilters;
+
+use Msantang\QueryFilters\Filter;
+
+class UserFilter extends Filter
+{
+    protected $filters = [
+        'created_at'  => 'date:from|date:to',
+        'name'        => 'string:begin',
+        'roles.name'  => 'string:contains',
+        'id'          => 'numeric:eq'
+    ];
+}
+```
+
+
+```
+#!php
+<?php namespace App\QueryFilters;
+
+use Msantang\QueryFilters\FilterInput;
+
+class UserFilterInput extends FilterInput
+{
+    // mapping from input to filter values
+    protected $mapping = [
+        'id'         => 'id',
+        'created_at' => 'desde|hasta',  // multiple filters
+        'name'       => 'name',
+        'roles.name' => 'roles_name'   // filter a joined model (user relation)
+    ];
+
+    // input validation
+    protected $rules = [
+        'id'         => 'integer',
+        'desde'      => 'date',
+        'hasta'      => 'date',
+        'name'       => 'string',
+        'roles.name' => 'string'
+    ];
+}
+```
 ### Using constructors ###
 ```
 #!php
