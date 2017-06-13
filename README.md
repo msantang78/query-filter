@@ -25,7 +25,10 @@ Route::get('user/', function () {
 * Filter remote fields through relations
 * Custom filter types through classes or closures
 
-## Install ##
+[Install](#install)
+[Usage ](#usage)
+
+## Install
 
 Require with composer
 
@@ -46,7 +49,9 @@ Msantang\QueryFilters\QueryFiltersServiceProvider::class,
 ```
 php artisan queryfilter:make User
 ```
-By default this will create App/QueryFilters/UserFilter.php and App/QueryFilters/UserFilterInput.php
+By default this will create two files
+
+App/QueryFilters/UserFilter.php:
 
 ```
 #!php
@@ -65,8 +70,7 @@ class UserFilter extends Filter
     ];
 }
 ```
-
-
+and App/QueryFilters/UserFilterInput.php:
 ```
 #!php
 <?php namespace App\QueryFilters;
@@ -94,6 +98,23 @@ class UserFilterInput extends FilterInput
     ];
 }
 ```
+
+### Add Filterable to your model ###
+```
+#!php
+<?php
+
+namespace App;
+
+use Msantang\QueryFilters\Filterable;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    use Filterable;
+}
+```
+
 ### Using constructors ###
 ```
 #!php
