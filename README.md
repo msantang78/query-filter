@@ -112,6 +112,14 @@ class User extends Model
 }
 ```
 
+Use filter scope
+```
+#!php
+<?php
+Route::get('user/', function () {
+    return App\User::filter()->get();
+});
+
 ### Using constructors ###
 ```
 #!php
