@@ -25,9 +25,6 @@ Route::get('user/', function () {
 * Filter remote fields through relations
 * Custom filter types through classes or closures
 
-[Install](#install)
-[Usage ](#usage)
-
 ## Install
 
 Require with composer
