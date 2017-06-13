@@ -119,6 +119,8 @@ Use filter scope
 Route::get('user/', function () {
     return App\User::filter()->get();
 });
+```
+
 
 ### Using constructors ###
 ```
