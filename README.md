@@ -3,9 +3,9 @@
 [![Total Downloads](http://img.shields.io/packagist/dt/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
 [![License](https://img.shields.io/packagist/l/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
 
-Filter Eloquent model's in a simple and clean way. 
+Filter Eloquent models in a simple and clean way. 
 
-You could filter model with url call´s like this
+You can filter model with url call´s like this
 ```
   /users/?created_from=2017-01-01&created_to=2017-01-01&roles_name=Admin
   /users/?id=2
@@ -38,7 +38,7 @@ Add service provider to config/app.php (If you want to use creator command)
 Msantang\QueryFilters\QueryFiltersServiceProvider::class,
 ```
 
-## Use ##
+## Usage ##
 
 
 ### Create Filter and InputFilter ###
@@ -57,9 +57,10 @@ use Msantang\QueryFilters\Filter;
 class UserFilter extends Filter
 {
     protected $filters = [
-        'created_at'  => 'date:from|date:to',
+     // field            type:operation
+        'created_at'  => 'date:from|date:to',  // multiple filter
         'name'        => 'string:begin',
-        'roles.name'  => 'string:contains',
+        'roles.name'  => 'string:contains',    // filter on joined model (Roles)
         'id'          => 'numeric:eq'
     ];
 }
@@ -76,6 +77,7 @@ class UserFilterInput extends FilterInput
 {
     // mapping from input to filter values
     protected $mapping = [
+     // field           input name
         'id'         => 'id',
         'created_at' => 'desde|hasta',  // multiple filters
         'name'       => 'name',
@@ -325,9 +327,9 @@ $filter = [
 and then select an other operation dinamicaly
 
 ```
-  /users/?byid=2&byid_opt[]=neq
+  /users/?byid=2&byid_opt=neq
 ```
-{mapping_name}_opt[] = operation
+{mapping_name}_opt = operation
 
 # TODO #
 * TEST!!!
