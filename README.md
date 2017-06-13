@@ -112,7 +112,7 @@ class User extends Model
 }
 ```
 
-Use filter scope
+### Use filter scope
 ```
 #!php
 <?php
