@@ -97,6 +97,11 @@ class UserFilterInput extends FilterInput
 ```
 
 ### Add Filterable to your model ###
+
+By default the model will look for App\QueryFilters\{Model}Filter and App\QueryFilters\{Model}FilterInput
+if you want to override this, just publish the package config and change namespace in queryfilter.php config file
+Or set the protected $filter_class and $filter_input_class propierties;
+
 ```
 #!php
 <?php
