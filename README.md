@@ -5,6 +5,21 @@
 
 Filter Eloquent model's in a simple and clean way. 
 
+You could filter model with url call´s like this
+```
+  /users/?created_from=2017-01-01&created_to=2017-01-01&roles_name=Admin
+  /users/?id=2
+  /users/?id[]=1&id[]=3&id[]=6
+```
+Just with
+```
+#!php
+<?php
+Route::get('user/', function () {
+    return App\User::filter()->get();
+});
+```
+## Features ##
 * Input values validation
 * Support multiple filters by fields
 * Filter remote fields through relations
@@ -24,13 +39,7 @@ Msantang\QueryFilters\QueryFiltersServiceProvider::class,
 ```
 
 ## Use ##
-Example to filter Users model
 
-```
-  /users/?created_from=2017-01-01&created_to=2017-01-01&roles_name=Admin
-  /users/?id=2
-  /users/?id[]=1&id[]=3&id[]=6
-```
 
 ### Create Filter and InputFilter ###
 
