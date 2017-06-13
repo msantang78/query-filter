@@ -1,0 +1,16 @@
+<?php namespace {{namespace}};
+
+use Msantang\QueryFilters\FilterInput;
+
+class {{class}}Input extends FilterInput
+{
+    // mapping from input to filter values
+    protected $mapping = [
+        'id'         => 'id'
+    ];
+
+    // input validation
+    protected $rules = [
+        'id'        => 'numeric'
+    ];
+}

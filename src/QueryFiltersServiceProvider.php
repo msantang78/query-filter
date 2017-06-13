@@ -12,14 +12,37 @@ class QueryFiltersServiceProvider extends ServiceProvider {
 	protected $defer = false;
 
 	/**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__.'/../config/queryfilters.php' => config_path('queryfilters.php'),
+        ],'config');
+    }
+
+	/**
 	 * Register the service provider.
 	 *
 	 * @return void
 	 */
 	public function register()
 	{
-		//
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/queryfilters.php', 'queryfilters'
+        );
+		$this->registerQueryFilterGeneratorCommand();
 	}
+
+    private function registerQueryFilterGeneratorCommand()
+    {
+        $this->app->singleton('command.queryfilter.make', function ($app) {
+            return $app['Msantang\QueryFilters\Commands\MakeQueryFilter'];
+        });
+        $this->commands('command.queryfilter.make');
+    }
 
 	/**
 	 * Get the services provided by the provider.

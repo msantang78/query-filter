@@ -2,7 +2,7 @@
 namespace Msantang\QueryFilters;
 
 use Validator;
-
+use Illuminate\Validation\ValidationException;
 /**
  * Input parser and validator for filters
  */
@@ -41,8 +41,33 @@ class FilterInput
      */
     public function validate()
     {
+        if (empty($this->rules)) return true;
+        return !$this->getValidator()->fails();
+    }
+
+    /**
+     * Validate or throw
+     * @throws ValidationException
+     */
+    public function validateOrFail()
+    {
+        if (empty($this->rules)) return true;
+
+        $validator = $this->getValidator();
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+        return true;
+    }
+
+    /**
+     * @return Validator
+     */
+    public function getValidator()
+    {
         $this->validator = Validator::make($this->data, $this->getRules());
-        return !$this->validator->fails();
+        return $this->validator;
     }
 
     /**
@@ -64,7 +89,7 @@ class FilterInput
             $this->rules = $rules;
         }
 
-        if($mapping) {
+        if ($mapping) {
             $this->mapping = $mapping;
         }
     }
@@ -149,7 +174,7 @@ class FilterInput
      */
     public static function fromRequest($mapping = null, $defaults = null, $rules = null)
     {
-        $request = app()['Illuminate\Http\Request'];
+        $request = request();
         return new static( $request->all(), $mapping, $defaults, $rules);
     }
     /**

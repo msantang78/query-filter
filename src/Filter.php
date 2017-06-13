@@ -2,9 +2,7 @@
 /**
  * @author Martin Alejandro Santangelo
  */
-
 namespace Msantang\QueryFilters;
-
 
 use Msantang\QueryFilters\Contracts\FilterInterface;
 

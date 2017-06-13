@@ -1,0 +1,10 @@
+<?php namespace {{namespace}};
+
+use Msantang\QueryFilters\Filter;
+
+class {{class}} extends Filter
+{
+    protected $filters = [
+        'id' => 'numeric:eq'
+    ];
+}
