@@ -126,6 +126,27 @@ Route::get('user/', function () {
 });
 ```
 
+### Changing the operation for a field filter
+
+You could have a filter defined like this:
+
+```
+#!php
+<?php
+$mapping = [
+    'id' => 'byid',
+];
+
+$filter = [
+    'id' => 'numeric:eq'
+]
+```
+and then select an other operation dinamicaly
+
+```
+  /users/?byid=2&byid_opt=neq
+```
+{mapping_name}_opt = operation
 
 ### Using constructors ###
 ```
@@ -175,6 +196,7 @@ $filter->apply($query, $input);
 
 return $query->get();
 ```
+
 ## Filter Types##
 
 ### Numeric ###
@@ -271,28 +293,6 @@ $f = new Filter([
     'id'          => [new MyFilter]
 ]);
 ```
-
-## Changing the operation for a field filter ##
-
-You could have a filter defined like this:
-
-```
-#!php
-<?php
-$mapping = [
-    'id' => 'byid',
-];
-
-$filter = [
-    'id' => 'numeric:eq'
-]
-```
-and then select an other operation dinamicaly
-
-```
-  /users/?byid=2&byid_opt=neq
-```
-{mapping_name}_opt = operation
 
 # TODO #
 * TEST!!!
