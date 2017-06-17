@@ -144,7 +144,7 @@ then you can change the operation dinamicaly like this:
 ```
   /users/?byid=2&byid_opt=neq
 ```
-{mapping_name}_opt = operation
+sending a request parameter with name {mapping_name}_opt = operation
 
 ### Using constructors ###
 ```
