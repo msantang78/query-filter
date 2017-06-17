@@ -127,9 +127,7 @@ Route::get('user/', function () {
 ```
 
 ### Changing the operation for a field filter
-
-You could have a filter defined like this:
-
+If you have a filter like:
 ```
 #!php
 <?php
@@ -141,7 +139,7 @@ $filter = [
     'id' => 'numeric:eq'
 ]
 ```
-and then select an other operation dinamicaly
+then you can change the operation dinamicaly like this:
 
 ```
   /users/?byid=2&byid_opt=neq
