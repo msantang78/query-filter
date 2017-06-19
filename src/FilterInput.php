@@ -138,9 +138,7 @@ class FilterInput
                     $tmp[$k][] = $this->data[$name];
 
                     if (array_key_exists($name.'_opt', $this->data)) {
-                        foreach ($this->data[$name.'_opt'] as $opt) {
-                            $tmp[$k][] = $opt;
-                        }
+                        $tmp[$k][] = $this->data[$name.'_opt'];
                     }
                 }
             }
