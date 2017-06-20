@@ -1,12 +1,15 @@
 <?php
+
 require 'vendor/autoload.php';
 use Mockery as m;
 
-function config($path, $default) {
+function config($path, $default)
+{
     return $default;
 }
 
-function request() {
+function request()
+{
     $request = m::mock('Illuminate\Http\Request');
     $request->shouldReceive('all')
             ->once()
@@ -19,4 +22,3 @@ function app($class)
 {
     return new $class;
 }
-

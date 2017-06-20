@@ -10,7 +10,6 @@ class FilterInputTest extends TestCase
 {
     public function setUp()
     {
-
     }
 
     public function tearDown()
@@ -33,7 +32,7 @@ class FilterInputTest extends TestCase
     }
 
     /**
-     * Test Validation
+     * Test Validation.
      */
     public function testValidate()
     {
@@ -85,19 +84,19 @@ class FilterInputTest extends TestCase
         $data = [
             'id'       => 1,
             'name'     => 'martin',
-            'name_opt' => 'eq'
+            'name_opt' => 'eq',
         ];
 
         $mapped = [
-            "id" => [
-                0 => [0 => 1]
+            'id' => [
+                0 => [0 => 1],
             ],
-            "name" => [
+            'name' => [
                 0 => [
-                  0 => "martin",
-                  1 => "eq"
-                ]
-            ]
+                  0 => 'martin',
+                  1 => 'eq',
+                ],
+            ],
         ];
 
         $filter_input = FilterInput::fromArray($data);
@@ -110,27 +109,27 @@ class FilterInputTest extends TestCase
             [
                 ['byid' => '1'],  // input
                 ['id' => 'byid'], // mapping
-                ['id' => [[1]]]   // correct answer
-            ],[
+                ['id' => [[1]]],   // correct answer
+            ], [
                 ['byid' => '1', 'byid_opt' => 'eq'],  // input
                 ['id' => 'byid'],                     // mapping
-                ['id' => [[1, 'eq']]]                 // correct answer
-            ],[
+                ['id' => [[1, 'eq']]],                 // correct answer
+            ], [
                 ['byid' => '1', 'byid_opt' => 'eq', 'idmax' => '2'],  // input
                 ['id' => 'byid|idmax'],                               // mapping mutiple filter to one field
-                ['id' => [[1, 'eq'], [2]]]                            // correct answer
-            ],[
+                ['id' => [[1, 'eq'], [2]]],                            // correct answer
+            ], [
                 ['byid' => '1', 'byid_opt' => 'eq', 'idmax' => '2', 'idmax_opt' => 'neq'],  // input
                 ['id' => 'byid|idmax'],                                                     // mapping
-                ['id' => [[1, 'eq'], [2, 'neq']]]                                           // correct answer
-            ],[
+                ['id' => [[1, 'eq'], [2, 'neq']]],                                           // correct answer
+            ], [
                 ['byid' => '1', 'byid_opt' => 'eq', 'idmax' => '2'],  // input
                 ['id' => 'byid'],                                     // mapping
-                ['id' => [[1, 'eq']]]                                 // correct answer
-            ],[
+                ['id' => [[1, 'eq']]],                                 // correct answer
+            ], [
                 ['userrole' => 'admin', 'userrole_opt' => 'eq'],  // input
                 ['role.name' => 'userrole'],                      // mapping
-                ['role.name' => [['admin', 'eq']]]                // correct answer
+                ['role.name' => [['admin', 'eq']]],                // correct answer
             ],
         ];
     }

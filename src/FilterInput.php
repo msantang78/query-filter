@@ -109,8 +109,8 @@ class FilterInput
     {
         $keys = array_keys($this->data);
         // filter operator parameters
-        $keys = array_filter($keys, function($v) {
-            return !ends_with($v, '_opt');
+        $keys = array_filter($keys, function ($v) {
+            return ! ends_with($v, '_opt');
         });
 
         return array_combine($keys, $keys);
