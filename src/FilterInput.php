@@ -2,7 +2,7 @@
 
 namespace Msantang\QueryFilters;
 
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -100,7 +100,20 @@ class FilterInput
 
         if ($mapping) {
             $this->mapping = $mapping;
+        } else {
+            $this->mapping = $this->getDefaultMapping();
         }
+    }
+
+    protected function getDefaultMapping()
+    {
+        $keys = array_keys($this->data);
+        // filter operator parameters
+        $keys = array_filter($keys, function($v) {
+            return !ends_with($v, '_opt');
+        });
+
+        return array_combine($keys, $keys);
     }
 
     /**
@@ -111,6 +124,9 @@ class FilterInput
         return $this->rules;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return $this->data;
@@ -195,6 +211,6 @@ class FilterInput
      */
     public static function fromArray($data, $mapping = null, $defaults = null, $rules = null)
     {
-        return new static($data, $defaults, $rules);
+        return new static($data, $mapping, $defaults, $rules);
     }
 }

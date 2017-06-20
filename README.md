@@ -1,10 +1,10 @@
 # Laravel Eloquent/Query Filter #
-[![Latest Stable Version](http://img.shields.io/packagist/v/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters) 
+[![Latest Stable Version](http://img.shields.io/packagist/v/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
 [![Total Downloads](http://img.shields.io/packagist/dt/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
 [![License](https://img.shields.io/packagist/l/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
 [![StyleCI](https://styleci.io/repos/94721670/shield)](https://styleci.io/repos/94721670/)
 
-Filter Eloquent models in a simple and clean way. 
+Filter Eloquent models in a simple and clean way.
 
 You can filter model with url call´s like this
 ```
@@ -272,7 +272,7 @@ class MyFilter extends AbstractParameterFilter implements ParameterFilterInterfa
             case 'eq':
                 $query->where($name,'=', $value);
                 break;
-            
+
             default:
                 $query->where($name,'like', "%$value%");
                 break;
@@ -293,5 +293,6 @@ $f = new Filter([
 ]);
 ```
 
-# TODO #
-* TEST!!!
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details

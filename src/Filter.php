@@ -93,7 +93,7 @@ class Filter implements FilterInterface
 
             $fvalue = $values[$k][0];
             // get the filter by definition
-            list($filter, $opt) = $this->getFilter($filter_definition, $v);
+            list($filter, $opt) = $this->getFilter($filter_definition);
 
             // if options come
             if (count($values[$k]) > 1) {

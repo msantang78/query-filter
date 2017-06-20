@@ -66,7 +66,7 @@ trait Filterable
     protected function getFilterClass()
     {
         if (! $this->filter_class) {
-            return config('queryfilters.namespace').class_basename($this).'Filter';
+            return config('queryfilters.namespace', 'App\\QueryFilters\\').class_basename($this).'Filter';
         }
 
         return $this->filter_class;
@@ -80,7 +80,7 @@ trait Filterable
     protected function getFilterInputClass()
     {
         if (! $this->filter_input_class) {
-            return config('queryfilters.namespace').class_basename($this).'FilterInput';
+            return config('queryfilters.namespace', 'App\\QueryFilters\\').class_basename($this).'FilterInput';
         }
 
         return $this->filter_input_class;
