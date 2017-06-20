@@ -1,16 +1,17 @@
 <?php
+
 namespace Msantang\QueryFilters;
 
 trait Filterable
 {
     /**
-     * QueryFilter class
+     * QueryFilter class.
      * @var string
      */
     protected $filter_class;
 
     /**
-     * QueryFilterInput class
+     * QueryFilterInput class.
      * @var string
      */
     protected $filter_input_class;
@@ -25,11 +26,11 @@ trait Filterable
     {
         // Resolve the current Model's filter
         $filter_class = $this->getFilterClass();
-        $input_class  = $this->getFilterInputClass();
+        $input_class = $this->getFilterInputClass();
 
         // create instances
         $filter = new $filter_class();
-        $input  = $input_class::fromRequest();
+        $input = $input_class::fromRequest();
 
         // validate filter input or throw
         $input->validateOrFail();
@@ -39,9 +40,8 @@ trait Filterable
         return $query;
     }
 
-
     /**
-     * Filter with given input and filter instances
+     * Filter with given input and filter instances.
      *
      * @param  $query
      * @param  FilterInput $input input definition
@@ -54,6 +54,7 @@ trait Filterable
         $input->validateOrFail();
         // apply filter
         $filter->apply($query, $input);
+
         return $query;
     }
 
@@ -64,9 +65,10 @@ trait Filterable
      */
     protected function getFilterClass()
     {
-        if (!$this->filter_class) {
+        if (! $this->filter_class) {
             return config('queryfilters.namespace').class_basename($this).'Filter';
         }
+
         return $this->filter_class;
     }
 
@@ -77,9 +79,10 @@ trait Filterable
      */
     protected function getFilterInputClass()
     {
-        if (!$this->filter_input_class) {
+        if (! $this->filter_input_class) {
             return config('queryfilters.namespace').class_basename($this).'FilterInput';
         }
+
         return $this->filter_input_class;
     }
 }

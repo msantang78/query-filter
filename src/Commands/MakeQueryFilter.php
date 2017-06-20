@@ -1,4 +1,5 @@
 <?php
+
 namespace Msantang\QueryFilters\Commands;
 
 use Illuminate\Console\Command;

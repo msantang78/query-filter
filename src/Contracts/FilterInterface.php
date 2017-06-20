@@ -1,8 +1,9 @@
 <?php
+
 namespace Msantang\QueryFilters\Contracts;
 
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Msantang\QueryFilters\FilterInput;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
  * @author Martin Alejandro Santangelo
@@ -10,7 +11,7 @@ use Msantang\QueryFilters\FilterInput;
 interface FilterInterface
 {
     /**
-     * Applies the filter
+     * Applies the filter.
      *
      * @param Model|EloquentBuilder $query
      * @param FilterInput $input
