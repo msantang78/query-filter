@@ -73,6 +73,7 @@ class Filter implements FilterInterface
         if (! is_callable($filter)) {
             throw new Exception("$param: ParameterFilter is not callable");
         }
+
         return [$filter, $opt];
     }
 
