@@ -1,17 +1,19 @@
-<?php namespace Msantang\QueryFilters;
+<?php
+
+namespace Msantang\QueryFilters;
 
 use Illuminate\Support\ServiceProvider;
 
-class QueryFiltersServiceProvider extends ServiceProvider {
+class QueryFiltersServiceProvider extends ServiceProvider
+{
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
-
-	/**
+    /**
      * Bootstrap any application services.
      *
      * @return void
@@ -20,21 +22,21 @@ class QueryFiltersServiceProvider extends ServiceProvider {
     {
         $this->publishes([
             __DIR__.'/../config/queryfilters.php' => config_path('queryfilters.php'),
-        ],'config');
+        ], 'config');
     }
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
         $this->mergeConfigFrom(
             __DIR__.'/../config/queryfilters.php', 'queryfilters'
         );
-		$this->registerQueryFilterGeneratorCommand();
-	}
+        $this->registerQueryFilterGeneratorCommand();
+    }
 
     private function registerQueryFilterGeneratorCommand()
     {
@@ -44,14 +46,13 @@ class QueryFiltersServiceProvider extends ServiceProvider {
         $this->commands('command.queryfilter.make');
     }
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array();
-	}
-
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [];
+    }
 }

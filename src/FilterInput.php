@@ -1,63 +1,71 @@
 <?php
+
 namespace Msantang\QueryFilters;
 
 use Validator;
 use Illuminate\Validation\ValidationException;
+
 /**
- * Input parser and validator for filters
+ * Input parser and validator for filters.
  */
 class FilterInput
 {
     /**
-     * Validation rules
+     * Validation rules.
      * @var array
      */
-    protected $rules    = [];
+    protected $rules = [];
     /**
-     * Input mapping
+     * Input mapping.
      * @var array
      */
-    protected $mapping  = [];
+    protected $mapping = [];
     /**
-     * Default values
+     * Default values.
      * @var array
      */
     protected $defaults = [];
     /**
-     * Input data
+     * Input data.
      * @var array
      */
-    protected $data     = [];
+    protected $data = [];
 
     /**
-     * Validator instance
+     * Validator instance.
      * @var Validator
      */
     protected $validator = null;
 
     /**
-     * Validate input
+     * Validate input.
      * @return [bool]
      */
     public function validate()
     {
-        if (empty($this->rules)) return true;
-        return !$this->getValidator()->fails();
+        if (empty($this->rules)) {
+            return true;
+        }
+
+        return ! $this->getValidator()->fails();
     }
 
     /**
-     * Validate or throw
+     * Validate or throw.
      * @throws ValidationException
      */
     public function validateOrFail()
     {
-        if (empty($this->rules)) return true;
+        if (empty($this->rules)) {
+            return true;
+        }
 
         $validator = $this->getValidator();
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
+
         return true;
     }
 
@@ -67,11 +75,12 @@ class FilterInput
     public function getValidator()
     {
         $this->validator = Validator::make($this->data, $this->getRules());
+
         return $this->validator;
     }
 
     /**
-     * Constructor
+     * Constructor.
      * @param array $data     Input data
      * @param array $mapping  Mapping inputs to filters
      * @param array $defaults Deaults (null for no defaults)
@@ -102,14 +111,13 @@ class FilterInput
         return $this->rules;
     }
 
-
     public function getData()
     {
         return $this->data;
     }
 
     /**
-     * Get Validation messages
+     * Get Validation messages.
      * @return MessageBag
      */
     public function messages()
@@ -122,7 +130,7 @@ class FilterInput
     }
 
     /**
-     * Map Input data
+     * Map Input data.
      * @return array
      */
     public function getMappedData()
@@ -133,7 +141,7 @@ class FilterInput
 
             $tmp = [];
 
-            foreach($names as $k => $name) {
+            foreach ($names as $k => $name) {
                 if (array_key_exists($name, $this->data)) {
                     $tmp[$k][] = $this->data[$name];
 
@@ -150,7 +158,7 @@ class FilterInput
     }
 
     /**
-     * Create an instance of input with data from Http Request
+     * Create an instance of input with data from Http Request.
      *
      * @param array $data     Input data
      * @param array $mapping  Mapping inputs to filters
@@ -162,8 +170,8 @@ class FilterInput
         self::fromRequest($mapping, $defaults, $rules);
     }
 
-     /**
-     * Create an instance of input with data from Http Request
+    /**
+     * Create an instance of input with data from Http Request.
      *
      * @param array $data     Input data
      * @param array $mapping  Mapping inputs to filters
@@ -173,17 +181,19 @@ class FilterInput
     public static function fromRequest($mapping = null, $defaults = null, $rules = null)
     {
         $request = request();
-        return new static( $request->all(), $mapping, $defaults, $rules);
+
+        return new static($request->all(), $mapping, $defaults, $rules);
     }
+
     /**
-     * Create an instance of input with data from an array
+     * Create an instance of input with data from an array.
      *
      * @param array $data     Input data
      * @param array $mapping  Mapping inputs to filters
      * @param array $defaults Deaults (null for no defaults)
      * @param array $rules    Validation rules
      */
-    public static function fromArray($data,$mapping = null, $defaults = null, $rules = null)
+    public static function fromArray($data, $mapping = null, $defaults = null, $rules = null)
     {
         return new static($data, $defaults, $rules);
     }
