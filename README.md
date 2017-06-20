@@ -2,6 +2,7 @@
 [![Latest Stable Version](http://img.shields.io/packagist/v/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters) 
 [![Total Downloads](http://img.shields.io/packagist/dt/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
 [![License](https://img.shields.io/packagist/l/msantang/query-filters.svg)](https://packagist.org/packages/msantang/query-filters)
+[![StyleCI](https://styleci.io/repos/94721670/shield)](https://styleci.io/repos/94721670/)
 
 Filter Eloquent models in a simple and clean way. 
 
